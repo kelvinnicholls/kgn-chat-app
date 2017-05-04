@@ -26,16 +26,22 @@ io.on('connection', (socket) => {
     //     console.log("Create Email", data);
     // });
 
-    socket.emit('newMessage', {
-        from: "Kelv",
-        text: "Whats up",
-        createdAt: new Date().getTime()
-    });
+
+    //socket.emit emits and event to a single connection
+    // socket.emit('newMessage', {
+    //     from: "Kelv",
+    //     text: "Whats up",
+    //     createdAt: new Date().getTime()
+    // });
 
     socket.on('createMessage', (msg) => {
         msg.createdAt = new Date().getTime();
         console.log("Create Message", msg);
+        //io.emit emits and event to a every single connection
+        io.emit('newMessage', msg);
     });
+
+
 
 }); // registers an event listener
 

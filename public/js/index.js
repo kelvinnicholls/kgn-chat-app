@@ -19,7 +19,7 @@ socket.on('newMessage', function (msg) {
     console.log("New Message", msg);
 });
 
-socket.emit('createMessage', {
-    from: "Bob",
-    text: "How Do"
-});
+// socket.emit('createMessage', {
+//     from: "Bob",
+//     text: "How Do"
+// });
