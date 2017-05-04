@@ -3,6 +3,12 @@ const http = require('http'); // required for socket.io, used by express
 const express = require('express');
 const socketIO = require('socket.io');
 
+const message = require('./utils/message');
+
+let {
+    generateMessage
+} = require('./utils/message');
+
 const publicPath = path.join(__dirname, '../public');
 
 let app = express();
@@ -19,17 +25,11 @@ io.on('connection', (socket) => {
 
     // socket.emit from admin text welcome to the chat app
 
-    socket.emit('newMessage', {
-        from: 'Admin',
-        text: "Welcome to the chat app"
-    });
+    socket.emit('newMessage',generateMessage('Admin',"Welcome to the chat app"));
 
     // socket.broadcast.emit from admin new user joined
 
-    socket.broadcast.emit('newMessage', {
-        from: 'Admin',
-        text: "A new user has joined the chat app"
-    });
+    socket.broadcast.emit('newMessage',generateMessage('Admin',"A new user has joined the chat app"));
 
 
 
