@@ -16,6 +16,27 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log("Client Disconnected");
     });
+    // socket.emit('newEmail', {
+    //     from: 'mike@mike.com',
+    //     text: "Whats up",
+    //     createdAt: 1223
+    // });
+
+    // socket.on('createEmail', (data) => {
+    //     console.log("Create Email", data);
+    // });
+
+    socket.emit('newMessage', {
+        from: "Kelv",
+        text: "Whats up",
+        createdAt: new Date().getTime()
+    });
+
+    socket.on('createMessage', (msg) => {
+        msg.createdAt = new Date().getTime();
+        console.log("Create Message", msg);
+    });
+
 }); // registers an event listener
 
 
