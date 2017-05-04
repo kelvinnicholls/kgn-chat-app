@@ -16,6 +16,24 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log("Client Disconnected");
     });
+
+    // socket.emit from admin text welcome to the chat app
+
+    socket.emit('newMessage', {
+        from: 'Admin',
+        text: "Welcome to the chat app"
+    });
+
+    // socket.broadcast.emit from admin new user joined
+
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: "A new user has joined the chat app"
+    });
+
+
+
+
     // socket.emit('newEmail', {
     //     from: 'mike@mike.com',
     //     text: "Whats up",
@@ -39,6 +57,7 @@ io.on('connection', (socket) => {
         console.log("Create Message", msg);
         //io.emit emits and event to a every single connection
         io.emit('newMessage', msg);
+        //socket.broadcast.emit('newMessage', msg); // emits to everyone but whoever initiated the event
     });
 
 
