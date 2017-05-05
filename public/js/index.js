@@ -40,27 +40,34 @@ socket.on('newMessage', function (msg) {
 //     text: "How Do"
 // });
 
+let msgTextBox = $('[name=message]');
+let sendLocationButton = $('#sendlocation');
+
+
 $('#msg-form').on('submit', function (e) {
-    e.preventDefault();
-    socket.emit('createMessage', (generateMessage('User', $('[name=message]').val())), function (msg) {
-        console.log("Got it", msg);
+    e.preventDefault();    
+    socket.emit('createMessage', (generateMessage('User', msgTextBox.val())), function (msg) {
+        msgTextBox.val('');
     });
 })
 
-let sendLocationButton = $('#sendlocation');
+
 
 sendLocationButton.on('click', function () {
     if (!navigator.geolocation) {
         return alert("Geolocation not supported by your browser");
     }
+    sendLocationButton.attr('disabled','disabled').text('Sending Location...');;
     navigator.geolocation.getCurrentPosition(function (position) {
-        console.log("position", position);
+        sendLocationButton.removeAttr('disabled').text('Send Location');
         socket.emit('CreateLocationMessage', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
         })
     }, function () {
         alert("Unable to fetch location");
+        sendLocationButton.removeAttr('disabled').text('Send Location');
+        msgTextBox.val('');
     });
 });
 
@@ -69,7 +76,7 @@ socket.on('newLocationMessage', function (msg) {
     let li = $('<li></li>');
     let a = $('<a target="_blank">My Current Location<\a>');
     li.text(`${msg.from}: `);
-    a.attr('href',msg.url);
+    a.attr('href', msg.url);
     li.append(a);
     $('#messages').append(li);
 });

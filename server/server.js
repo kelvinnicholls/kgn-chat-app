@@ -60,9 +60,7 @@ io.on('connection', (socket) => {
         console.log("Create Message", msg);
         //io.emit emits and event to a every single connection
         io.emit('newMessage', msg);
-        callback({
-            message: "This is from the server"
-        });
+        callback();
         //socket.broadcast.emit('newMessage', msg); // emits to everyone but whoever initiated the event
     });
 
