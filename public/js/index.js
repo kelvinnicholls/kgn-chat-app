@@ -46,3 +46,30 @@ $('#msg-form').on('submit', function (e) {
         console.log("Got it", msg);
     });
 })
+
+let sendLocationButton = $('#sendlocation');
+
+sendLocationButton.on('click', function () {
+    if (!navigator.geolocation) {
+        return alert("Geolocation not supported by your browser");
+    }
+    navigator.geolocation.getCurrentPosition(function (position) {
+        console.log("position", position);
+        socket.emit('CreateLocationMessage', {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        })
+    }, function () {
+        alert("Unable to fetch location");
+    });
+});
+
+socket.on('newLocationMessage', function (msg) {
+    console.log("New Location Message", msg);
+    let li = $('<li></li>');
+    let a = $('<a target="_blank">My Current Location<\a>');
+    li.text(`${msg.from}: `);
+    a.attr('href',msg.url);
+    li.append(a);
+    $('#messages').append(li);
+});
