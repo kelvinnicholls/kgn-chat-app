@@ -52,11 +52,14 @@ io.on('connection', (socket) => {
     //     createdAt: new Date().getTime()
     // });
 
-    socket.on('createMessage', (msg) => {
+    socket.on('createMessage', (msg,callback) => {
         msg.createdAt = new Date().getTime();
         console.log("Create Message", msg);
         //io.emit emits and event to a every single connection
         io.emit('newMessage', msg);
+        callback({
+            message : "This is from the server"
+        });
         //socket.broadcast.emit('newMessage', msg); // emits to everyone but whoever initiated the event
     });
 
