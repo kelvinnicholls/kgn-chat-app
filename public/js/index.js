@@ -1,12 +1,6 @@
 let socket = io(); // initiates request
 
-let generateMessage = (from, text) => {
-    return {
-        from,
-        text,
-        createdAt: new Date().getTime()
-    };
-}
+
 
 socket.on('connect', function () {
     console.log("Connected to server");
@@ -25,9 +19,10 @@ socket.on('disconnect', function () {
 //     console.log("New Email",email);
 // });
 socket.on('newMessage', function (msg) {
+    let formattedDate = moment(msg.createdAt).format('h:mm a');
     console.log("New Message", msg);
     let li = $('<li></li>');
-    li.text(`${msg.from}: ${msg.text}`);
+    li.text(`${msg.from} ${formattedDate}: ${msg.text}`);
     $('#messages').append(li);
 });
 
@@ -57,7 +52,7 @@ sendLocationButton.on('click', function () {
     if (!navigator.geolocation) {
         return alert("Geolocation not supported by your browser");
     }
-    sendLocationButton.attr('disabled','disabled').text('Sending Location...');;
+    sendLocationButton.attr('disabled','disabled').text('Sending Location...');
     navigator.geolocation.getCurrentPosition(function (position) {
         sendLocationButton.removeAttr('disabled').text('Send Location');
         socket.emit('CreateLocationMessage', {
@@ -73,9 +68,10 @@ sendLocationButton.on('click', function () {
 
 socket.on('newLocationMessage', function (msg) {
     console.log("New Location Message", msg);
+    let formattedDate = moment().format('h:mm a');
     let li = $('<li></li>');
     let a = $('<a target="_blank">My Current Location<\a>');
-    li.text(`${msg.from}: `);
+    li.text(`${msg.from}: ${formattedDate} `);
     a.attr('href', msg.url);
     li.append(a);
     $('#messages').append(li);
