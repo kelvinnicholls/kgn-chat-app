@@ -20,10 +20,17 @@ socket.on('disconnect', function () {
 // });
 socket.on('newMessage', function (msg) {
     let formattedDate = moment(msg.createdAt).format('h:mm a');
-    console.log("New Message", msg);
-    let li = $('<li></li>');
-    li.text(`${msg.from} ${formattedDate}: ${msg.text}`);
-    $('#messages').append(li);
+    // console.log("New Message", msg);
+    // let li = $('<li></li>');
+    // li.text(`${msg.from} ${formattedDate}: ${msg.text}`);
+    // $('#messages').append(li);
+    let template = $('#message-template').html();
+    let html = Mustache.render(template,{
+        text: msg.text
+        , from : msg.from
+        , createdAt : formattedDate
+    });
+    $('#messages').append(html);
 });
 
 // socket.emit('createMessage', (generateMessage('John', 'Hi There!')), function (msg) {
@@ -37,6 +44,15 @@ socket.on('newMessage', function (msg) {
 
 let msgTextBox = $('[name=message]');
 let sendLocationButton = $('#sendlocation');
+
+
+let generateMessage = function(from, text) {
+    return {
+        from,
+        text,
+        createdAt:  moment().valueOf()
+    };
+};
 
 
 $('#msg-form').on('submit', function (e) {
@@ -67,12 +83,25 @@ sendLocationButton.on('click', function () {
 });
 
 socket.on('newLocationMessage', function (msg) {
-    console.log("New Location Message", msg);
-    let formattedDate = moment().format('h:mm a');
-    let li = $('<li></li>');
-    let a = $('<a target="_blank">My Current Location<\a>');
-    li.text(`${msg.from}: ${formattedDate} `);
-    a.attr('href', msg.url);
-    li.append(a);
-    $('#messages').append(li);
+    // console.log("New Location Message", msg);
+    // let formattedDate = moment().format('h:mm a');
+    // let li = $('<li></li>');
+    // let a = $('<a target="_blank">My Current Location<\a>');
+    // li.text(`${msg.from}: ${formattedDate} `);
+    // a.attr('href', msg.url);
+    // li.append(a);
+    // $('#messages').append(li);
+
+
+
+    let formattedDate = moment(msg.createdAt).format('h:mm a');
+    let template = $('#location-message-template').html();
+    let html = Mustache.render(template,{
+        url: msg.url
+        , from : msg.from
+        , createdAt : formattedDate
+    });
+    $('#messages').append(html);
+
+
 });
