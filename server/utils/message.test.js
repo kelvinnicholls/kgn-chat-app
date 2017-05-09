@@ -1,6 +1,6 @@
 let expect = require('expect');
 
-let {
+const {
     generateMessage
     ,generateLocationMessage
 } = require('./message');

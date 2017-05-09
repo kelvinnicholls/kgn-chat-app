@@ -21,6 +21,15 @@ function scrollToBottom() {
 
 socket.on('connect', function () {
     console.log("Connected to server");
+    let params = $.deparam(window.location.search);
+    socket.emit('join', params, function (err) {
+        if (err) {
+            alert(err);
+            window.location.href = '/';
+        } else {
+            console.log("No Error");
+        }
+    });
 
     // socket.emit('createEmail',{
     //     from: 'kelv@kelv.com',
@@ -28,6 +37,7 @@ socket.on('connect', function () {
     //     createdAt: 13355
     // })
 });
+
 socket.on('disconnect', function () {
     console.log("Disconnected from server");
 });
@@ -49,6 +59,28 @@ socket.on('newMessage', function (msg) {
     });
     $('#messages').append(html);
     scrollToBottom();
+});
+
+// function showName(name) {
+//     let template = $('#people-template').html();
+//     let html = Mustache.render(template, {
+//         name: name
+//     });
+//     $('#users').append(html);
+// }
+
+socket.on('updateUserList', function (users, user) {
+    console.log('newUser',users,user);
+
+    let ol = $('<ol></ol>')
+
+    if (users) {
+        users.forEach(function (user) {
+            ol.append($('<li></li>').text(user));
+        });
+        $('#users').html(ol);
+    };
+
 });
 
 // socket.emit('createMessage', (generateMessage('John', 'Hi There!')), function (msg) {
