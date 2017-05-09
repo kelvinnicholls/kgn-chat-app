@@ -107,7 +107,7 @@ let generateMessage = function (from, text) {
 
 $('#msg-form').on('submit', function (e) {
     e.preventDefault();
-    socket.emit('createMessage', (generateMessage('User', msgTextBox.val())), function (msg) {
+    socket.emit('createMessage', (generateMessage(socket.id, msgTextBox.val())), function (msg) {
         msgTextBox.val('');
     });
 })

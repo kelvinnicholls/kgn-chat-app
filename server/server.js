@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
         socket.join(params.room);
         users.removeUser(socket.id);
         let user = users.addUser(socket.id, params.name, params.room);
-        console.log("User added :",user,users);
+        console.log("User added :", user, users);
         //socket.leave(params.room);
 
         // io.emit // every connected user 
@@ -88,16 +88,29 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createMessage', (msg, callback) => {
-        msg.createdAt = new Date().getTime();
-        console.log("Create Message", msg);
-        //io.emit emits and event to a every single connection
-        io.emit('newMessage', msg);
+
+        let user = null;
+        if (isRealString(msg.from)) {
+            user = users.getUser(msg.from);
+        }
+        if (user && isRealString(msg.text)) {
+            msg.from = user.name;
+            msg.createdAt = new Date().getTime();
+
+            console.log("Create Message", msg);
+            //io.emit emits and event to a every single connection
+            io.to(user.room).emit('newMessage', msg);
+        }
+
         callback();
         //socket.broadcast.emit('newMessage', msg); // emits to everyone but whoever initiated the event
     });
 
     socket.on('CreateLocationMessage', (coords) => {
-        io.emit('newLocationMessage', generateLocationMessage('User', coords.latitude, coords.longitude));
+        let user = users.getUser(socket.id);
+        if (user) {
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+        }
     });
 
 
